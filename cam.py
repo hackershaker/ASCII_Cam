@@ -3,19 +3,28 @@ import cv2 as cv
 from PIL import Image, ImageFont, ImageDraw
 import numpy as np
 
+density = 'Ñ@#W$9876543210?!abc;:+=-,._ '
+
 def setResolution(cam, width, height):
     cam.set(3, width)
     cam.set(4, height)
 
-def converttoASCII(frame):
-    # print(len(frame))
-    # fnt = ImageFont.truetype("arial.ttf", 1)
-    # img = Image.new('L', size, color = 'black')
-    # draw = ImageDraw.Draw(img)
+def converttoASCII(frame, size=(30, 30)):
+    originalsize = (len(frame), len(frame[0]))
+    frame = cv.resize(frame, size)
+    cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+    # print(len(frame), len(frame[0]))
+    fnt = ImageFont.truetype("arial.ttf", 1)
+    img = Image.new('L', size, color = 'black')
+    draw = ImageDraw.Draw(img)
 
-    # draw.text((0,0), "aaaaaaaaaaaa", fill="white", font=fnt, spacing=0, align="center")
-    # img = np.array(img)
-    pass
+    for i in range(size[0]):
+        for j in range(size[1]):
+            light = density[int(sum(frame[i][j])/(256*3) * len(density))]
+            draw.text((i, j), light, fill="white", font=fnt, spacing=0, align="center")
+
+    img = np.array(img)
+    return img
 
 def openWebcam(size=(300, 400)):
     cap = cv.VideoCapture("test.mp4")
@@ -36,6 +45,5 @@ def openWebcam(size=(300, 400)):
     
 
 if __name__=="__main__":
-    density = 'Ñ@#W$9876543210?!abc;:+=-,._ '
     size = (200, 100)
     openWebcam(size)
