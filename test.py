@@ -1,11 +1,11 @@
 from unittest import TestCase, main
 import cv2 as cv
-import cam
+import ascii_filter
 
 class testclass(TestCase):
     def testconvert(self):
         img = cv.imread("test.jpg", cv.IMREAD_COLOR)
-        result = cam.converttoASCII(img)
+        result = ascii_filter.converttoASCII(img)
         cv.imwrite('testresult.jpg', result)
 
 
